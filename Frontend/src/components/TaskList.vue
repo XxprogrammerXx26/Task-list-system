@@ -1,61 +1,55 @@
 <template>
-    
-    
-   
-  <!-- Navbar -->
+  
   <nav class="navbar navbar-expand-lg" style="background-color: #0bbf3b;">
-    <div class="container-fluid" style="max-width: 1500px; margin: 0 auto;">
-      <a class="navbar-brand" href="#" style="color: white;">MyTaskList</a>
+    <div class="container-fluid">
+      <a class="navbar-brand text-white" href="#">MyTaskList</a>
       
-      <!-- Mostrar el nombre del usuario y el botón de cerrar sesión -->
+      
       <div class="navbar-right">
-        <span v-if="user" style="color: white; font-weight: bold; margin-right: 20px;">{{ user }}</span>
-        <button v-if="user" @click="logout" class="btn btn-danger">Cerrar sesión</button>
+        <span v-if="user" class="text-white font-weight-bold mr-3">{{ user }}</span>
+        <button v-if="user" @click="logout" class="btn btn-warning logout-btn">Cerrar sesión</button> 
       </div>
     </div>
-    
-    
   </nav>
-  
-  
 
+  <div class="task-list container mt-5">
+    <h1 class="text-center">Welcome to TaskList</h1>
 
-  
-  
-  <div class="task-list">
-    <h1>Welcome to TaskList</h1>
-
-    <!-- Input para agregar nuevas tareas -->
-    <div class="input-container">
-      <input v-model="newTask" type="text" placeholder="Agregar tarea..." />
-      <button @click="addTask">Agregar tarea</button>
+   
+    <div class="input-container row justify-content-center mt-4">
+      <div class="col-12 col-md-8">
+        <div class="input-group">
+          <input v-model="newTask" type="text" class="form-control" placeholder="Agregar tarea..." />
+          <button @click="addTask" class="btn btn-success">Agregar tarea</button>
+        </div>
+      </div>
     </div>
 
     <!-- Contenedor de las columnas Kanban -->
-    <div class="task-container">
-      <div class="task-column" v-for="(tasks, column) in tasks" :key="column">
+    <div class="task-container row justify-content-center mt-4">
+      <div class="task-column col-12 col-md-4 mb-4" v-for="(tasks, column) in tasks" :key="column">
         <h2>{{ column === 'todo' ? 'Por hacer' : column === 'inProgress' ? 'En progreso' : 'Hecho' }}</h2>
 
         <!-- Lista de tareas en cada columna -->
-        <ul class="task-list">
-          <li v-for="task in tasks" :key="task.id" class="task-item">
+        <ul class="list-unstyled">
+          <li v-for="task in tasks" :key="task.id" class="task-item d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded shadow-sm">
             <span>{{ task.text }}</span>
             <div v-if="column === 'todo'">
               <input type="checkbox" v-model="selectedTasks[task.id]" />
             </div>
             <div>
-              <button class="edit" @click="editTask(task, column)">Editar</button>
-              <button class="delete" @click="deleteTask(task, column)">Eliminar</button>
+              <button class="btn btn-primary btn-sm edit-btn" @click="editTask(task, column)">Editar</button> <!-- Botón de editar azul predeterminado -->
+              <button class="btn btn-danger btn-sm delete-btn" @click="deleteTask(task, column)">Eliminar</button> <!-- Botón de eliminar rojo predeterminado -->
             </div>
           </li>
         </ul>
 
         <!-- Botones para mover tareas entre columnas -->
         <div class="task-actions" v-if="column === 'todo'">
-          <button @click="moveSelectedTasksToProgress">Mover tareas seleccionadas a En Progreso</button>
+          <button @click="moveSelectedTasksToProgress" class="btn btn-secondary w-100">Mover tareas seleccionadas a En Progreso</button>
         </div>
         <div class="task-actions" v-if="column === 'inProgress'">
-          <button @click="moveTaskToDone">Mover a Hecho</button>
+          <button @click="moveTaskToDone" class="btn btn-secondary w-100">Mover a Hecho</button>
         </div>
       </div>
     </div>
@@ -68,7 +62,21 @@
 
 
 
-
+  <br>
+  <br>
+  <div class="card text-center">
+  <div class="card-header">
+    Featured
+  </div>
+  <div class="card-body">
+    <h5 class="card-title">Special title treatment</h5>
+    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+  <div class="card-footer text-body-secondary">
+    2 days ago
+  </div>
+</div>
 
 
 
@@ -86,7 +94,8 @@ export default {
         inProgress: [], // Tareas "En progreso"
         done: [] // Tareas "Hecho"
       },
-      selectedTasks: {} // Objeto para almacenar las tareas seleccionadas
+      selectedTasks: {}, // Objeto para almacenar las tareas seleccionadas
+      user: 'Leo@gmail.com' // Simulación de un usuario logueado
     };
   },
   methods: {
@@ -149,6 +158,21 @@ export default {
       // Mover la tarea de "inProgress" a "done"
       this.tasks.done.push(task);
       this.deleteTask(task, 'inProgress'); // Eliminarla de la columna 'inProgress'
+    },
+
+    // Función para cerrar sesión
+    logout() {
+      this.user = null; // Eliminar la información del usuario
+      localStorage.removeItem('user'); // Opcional, si estás usando almacenamiento local
+      this.$router.push('/login'); // Redirigir al login o página de inicio
+    }
+  },
+
+  // Simulación de la sesión del usuario al cargar la página
+  mounted() {
+    const storedUser = localStorage.getItem('user'); // Si usas almacenamiento local
+    if (storedUser) {
+      this.user = storedUser;
     }
   }
 };
@@ -161,38 +185,28 @@ export default {
 /* Estilos Generales */
 .task-list {
   font-family: 'Roboto', sans-serif; /* Usamos la fuente Roboto */
-  background-color: #f0f0f0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  padding: 40px 20px; /* Aumento el padding superior e inferior */
+  background-color: #f0f0f0; 
+  padding: 40px 20px;
   min-height: 100vh;
 }
 
 h1 {
-  font-size: 2.5em; /* Aumento el tamaño del título */
+  font-size: 2.5em;
   margin-bottom: 30px;
   color: #333;
-  text-align: center;
-  font-weight: 700; /* Negrita para el título */
+  font-weight: 700;
 }
 
 /* Input Container */
-.input-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px; /* Aumento el espacio entre input y columnas */
+.input-container input {
+  font-size: 18px;
 }
 
 input {
-  width: 60%; /* Cambio el tamaño del input para mayor padding */
   padding: 15px;
-  font-size: 18px;
+  font-size: 16px;
   border-radius: 5px;
   border: 1px solid #ccc;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  font-family: 'Roboto', sans-serif;
 }
 
 button {
@@ -202,150 +216,93 @@ button {
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  margin-left: 15px;
-  font-size: 16px;
-  font-family: 'Roboto', sans-serif;
-}
-
-button:hover {
-  background-color: #45a049;
-  transform: translateY(-2px);
 }
 
 button:active {
   transform: translateY(2px);
 }
 
-/* Contenedor de las columnas Kanban */
-.task-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  width: 100%;
-  flex-wrap: wrap;
-  gap: 20px; /* Espacio entre las columnas */
-}
-
+/* Task Columns */
 .task-column {
-  width: 30%;
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
   min-height: 300px;
-  box-sizing: border-box; /* Para incluir el padding en el ancho total */
+  box-sizing: border-box;
 }
 
 h2 {
   text-align: center;
-  margin-bottom: 30px; /* Mayor espacio entre el título y las tareas */
-  color: #333;
+  margin-bottom: 30px;
+  color: #333; 
   font-size: 1.4em;
-  font-family: 'Roboto', sans-serif;
   font-weight: 700;
 }
 
-/* Lista de Tareas */
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-
+/* List of Tasks */
 .task-item {
-  background-color: #e0e0e0;
-  padding: 20px;
-  margin-bottom: 15px;
+ background-color: #e0e0e0; 
+  padding: 15px;
+  margin-bottom: 10px;
   border-radius: 8px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease-in-out;
-  font-family: 'Roboto', sans-serif;
 }
 
-.task-item:hover {
-  transform: translateY(-5px);
-}
-
-.task-item div {
-  display: flex;
-  gap: 10px; /* Espacio entre los botones de editar y eliminar */
-}
-
-/* Botones de Edición y Eliminación */
-button.edit,
-button.delete {
-  padding: 8px 15px;
-  border-radius: 5px;
-  cursor: pointer;
-  border: none;
+/* Estilo para botones Editar, Eliminar y Cerrar sesión */
+.edit-btn {
+  background-color: #007bff; /* Azul para editar */
   color: white;
 }
 
-button.edit {
-  background-color: #007bff;
-}
-
-button.delete {
-  background-color: #ff4757;
-}
-
-button.edit:hover,
-button.delete:hover {
-  opacity: 0.8;
-}
-
-/* Botones de Mover */
-.task-actions button {
-  padding: 12px 20px;
-  background-color: #007bff;
+.delete-btn {
+  background-color: #dc3545; /* Rojo para eliminar */
   color: white;
-  border-radius: 5px;
-  border: none;
-  margin-top: 20px;
-  width: 100%;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  font-family: 'Roboto', sans-serif;
-  font-size: 16px;
 }
 
-.task-actions button:hover {
-  background-color: #0062cc;
-  transform: translateY(-2px);
+.logout-btn {
+  background-color: #ff5733; /* Naranja llamativo para cerrar sesión */
+  color: white;
 }
 
-.task-actions button:active {
-  transform: translateY(2px);
+/* Eliminar el hover */
+button:hover {
+ /* background-color: inherit;  */
+ 
+  opacity: 1; /* No cambia la opacidad */
 }
 
-/* Responsividad */
-@media screen and (max-width: 768px) {
+button:focus {
+  outline: none; /* Eliminar el contorno cuando el botón es seleccionado */
+}
+
+/* Media Queries para hacer el diseño responsive con Bootstrap */
+@media (max-width: 768px) {
   .task-container {
     flex-direction: column;
-    align-items: center;
   }
 
   .task-column {
-    width: 80%;
     margin-bottom: 20px;
   }
-}
 
-@media screen and (max-width: 480px) {
-  input {
-    width: 75%;
+  h1 {
+    font-size: 2em;
   }
 
-  .task-column {
-    width: 90%;
+  h2 {
+    font-size: 1.2em;
   }
 
-  button {
-    width: 100%;
-    margin-left: 0;
+  .task-item {
+    font-size: 14px;
+  }
+
+  .navbar-right {
+    flex-direction: column;
   }
 }
 </style>
