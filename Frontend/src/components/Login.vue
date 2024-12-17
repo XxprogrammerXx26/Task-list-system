@@ -52,7 +52,7 @@ export default {
   methods: {
     handleLogin() {
       // Simulación de autenticación, aquí puedes integrar tu lógica real de login
-      if (this.username === 'admin' && this.password === 'password') {
+      if (this.username === 'leo' && this.password === '12345') {
         this.$router.push('/tasklist'); // Redirigir a la página de dashboard si es exitoso
       } else {
         this.loginError = true; // Mostrar el error si las credenciales son incorrectas
@@ -63,7 +63,7 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos para el contenedor y el formulario de login */
+
 .login-container {
   display: flex;
   flex-direction: column;

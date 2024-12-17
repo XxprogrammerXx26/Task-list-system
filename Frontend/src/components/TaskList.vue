@@ -3,7 +3,10 @@
   <nav class="navbar navbar-expand-lg" style="background-color: #0bbf3b;">
     <div class="container-fluid">
       <a class="navbar-brand text-white" href="#">MyTaskList</a>
-      
+     <!-- <a class="navbar-brand text-white" href="#">
+     <img src="/src/assets/Tarea.png" alt="MyTaskList Logo" style="width: 50px; height: 40px; object-fit: cover;">
+     </a> -->
+
       
       <div class="navbar-right">
         <span v-if="user" class="text-white font-weight-bold mr-3">{{ user }}</span>
@@ -13,24 +16,24 @@
   </nav>
 
   <div class="task-list container mt-5">
-    <h1 class="text-center">Welcome to TaskList</h1>
+    <h1 class="text-center">Bienvenido a Lista de Tareas</h1>
 
    
     <div class="input-container row justify-content-center mt-4">
       <div class="col-12 col-md-8">
         <div class="input-group">
           <input v-model="newTask" type="text" class="form-control" placeholder="Agregar tarea..." />
-          <button @click="addTask" class="btn btn-success">Agregar tarea</button>
+          <button @click="addTask" class="btn btn-success"  >Agregar tarea</button>
         </div>
       </div>
     </div>
 
-    <!-- Contenedor de las columnas Kanban -->
+    
     <div class="task-container row justify-content-center mt-4">
       <div class="task-column col-12 col-md-4 mb-4" v-for="(tasks, column) in tasks" :key="column">
         <h2>{{ column === 'todo' ? 'Por hacer' : column === 'inProgress' ? 'En progreso' : 'Hecho' }}</h2>
 
-        <!-- Lista de tareas en cada columna -->
+      
         <ul class="list-unstyled">
           <li v-for="task in tasks" :key="task.id" class="task-item d-flex justify-content-between align-items-center mb-3 p-3 bg-light rounded shadow-sm">
             <span>{{ task.text }}</span>
@@ -38,8 +41,18 @@
               <input type="checkbox" v-model="selectedTasks[task.id]" />
             </div>
             <div>
-              <button class="btn btn-primary btn-sm edit-btn" @click="editTask(task, column)">Editar</button> <!-- Botón de editar azul predeterminado -->
-              <button class="btn btn-danger btn-sm delete-btn" @click="deleteTask(task, column)">Eliminar</button> <!-- Botón de eliminar rojo predeterminado -->
+          <!--    <button class="btn btn-primary btn-sm edit-btn" @click="editTask(task, column)">Editar</button>-->
+          <!--  <button class="btn btn-danger btn-sm delete-btn" @click="deleteTask(task, column)">Eliminar</button> -->  
+
+          <button class="btn btn-link btn-sm edit-btn" @click="editTask(task, column)">
+          <i class="fas fa-edit"></i> <!-- Icono de editar -->
+          </button>
+
+          <button class="btn btn-link btn-sm delete-btn" @click="deleteTask(task, column)">
+          <i class="fas fa-trash-alt"></i> <!-- Icono de eliminar -->
+          </button>
+
+
             </div>
           </li>
         </ul>
@@ -64,14 +77,14 @@
 
   <br>
   <br>
-  <div class="card text-center">
-  <div class="card-header">
+  <div class="card text-center" style="background-color: #28a745; color: white">
+  <div class="card-header" style="background-color: #218838; color: white;"  >
     Featured
   </div>
   <div class="card-body">
-    <h5 class="card-title">Special title treatment</h5>
-    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-    <a href="#" class="btn btn-primary">Go somewhere</a>
+    <h5 class="card-title">Administrador de Trabajos en Equipo</h5>
+    <p class="card-text"> Derechos reservados 2024.</p>
+    <a href="#" class="btn btn-primary"  style="background-color: #ff5733; color: white"  >Subir a Inicio</a>
   </div>
   <div class="card-footer text-body-secondary">
     2 days ago
@@ -303,6 +316,7 @@ button:focus {
 
   .navbar-right {
     flex-direction: column;
+   
   }
 }
 </style>
